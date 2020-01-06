@@ -3,6 +3,11 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 target 'MyProject' do
   # Pods for MyProject
+  pod 'GoogleSignIn'
+  pod 'Firebase/Database'
+  pod 'Firebase/Analytics'
+  pod 'Firebase/Auth'
+  pod 'Firebase/Firestore'
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -38,6 +43,8 @@ target 'MyProject' do
 
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
+  pod 'RNGoogleSignin', :path => '../node_modules/@react-native-community/google-signin'
 
   target 'MyProjectTests' do
     inherit! :search_paths

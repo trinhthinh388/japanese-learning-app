@@ -3,14 +3,18 @@ import {
   Animated,
   StyleSheet,
   Text,
+  View,
   SafeAreaView,
   Image,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import googleLogo from '../assets/Google.png';
 import facebookLogo from '../assets/Facebook.png';
-import Login from './Login';
+import {GoogleSignin} from '@react-native-community/google-signin';
+import firebase from 'react-native-firebase';
+import * as Progress from 'react-native-progress';
 
 const buttonArr = [0, 1];
 
@@ -23,11 +27,51 @@ export default class Intro extends Component {
     buttonArr.forEach(value => {
       this.movingAnimValue[value] = new Animated.Value(0);
     });
+    this.state = {
+      logedIn: false,
+      logging: true,
+    };
   }
+
+  googleAuth = async () => {
+    try {
+      await GoogleSignin.configure({
+        scopes: [],
+        webClientId:
+          '934422948842-ssvtofhtb8v2fjk9g6pj8hetn16o6ll1.apps.googleusercontent.com',
+        offlineAccess: true,
+        hostedDomain: '',
+        loginHint: '',
+        forceConsentPrompt: true,
+        accountName: '',
+      });
+
+      const data = await GoogleSignin.signIn();
+
+      const credential = firebase.auth.GoogleAuthProvider.credential(
+        data.idToken,
+        data.accessToken,
+      );
+      const firebaseUserCredential = await firebase
+        .auth()
+        .signInWithCredential(credential);
+      return true;
+    } catch (error) {
+      console.log(error);
+      alert('Đăng nhập thất bại.');
+      return false;
+    }
+  };
+
+  UserAuth = () => {
+    setTimeout(() => {
+      this.animate();
+    }, 700);
+  };
 
   componentDidMount() {
     SplashScreen.hide();
-    setTimeout(() => this.animate(), 700);
+    this.UserAuth();
   }
 
   animate() {
@@ -52,7 +96,16 @@ export default class Intro extends Component {
             }),
           ]),
       ),
-    ]).start();
+    ]).start(() => {
+      firebase.auth().onAuthStateChanged(user => {
+        this.setState({logging: true});
+        if (user) {
+          this.setState({logedIn: true});
+          this.props.navigation.navigate('MainScreen');
+        }
+        this.setState({logging: false});
+      });
+    });
   }
 
   render() {
@@ -61,51 +114,58 @@ export default class Intro extends Component {
       outputRange: [35, 0],
     });
 
+    const progressCircleSnail = () => {
+      return (
+        <Progress.CircleSnail size={45} color={['red', 'green', 'blue']} />
+      );
+    };
+
     return (
       <SafeAreaView style={styles.fullScreen}>
         <Animated.Text style={{paddingBottom: titlePadding}}>
           <Text style={styles.title}>Japle</Text>
         </Animated.Text>
         <Animated.View style={[styles.centered, {opacity: this.animatedValue}]}>
-          <Text style={styles.signInText}>Welcome back.</Text>
+          <Text style={styles.signInText}>Mừng bạn đã trở lại.</Text>
         </Animated.View>
-        {buttonArr.map(value => {
-          const brand = value === 0 ? 'Google' : 'Facebook';
-          const logo = value === 0 ? googleLogo : facebookLogo;
-          return (
-            <Animated.View
-              key={value}
-              style={[
-                styles.centered,
-                {
-                  opacity: this.movingAnimValue[value],
-                },
-              ]}>
-              <TouchableOpacity style={[styles.signUpButton]}>
-                <Image style={styles.logo} source={logo} />
-                <Text>{`Sign up with ${brand}`}</Text>
+        <Animated.View
+          style={[
+            styles.centered,
+            {
+              opacity: this.movingAnimValue[1],
+            },
+          ]}>
+          {this.state.logging ? (
+            progressCircleSnail()
+          ) : (
+            <View>
+              <TouchableOpacity
+                style={[styles.signUpButton]}
+                onPress={async () => {
+                  this.setState({logging: true});
+                  let result = await this.googleAuth();
+                  this.setState({logging: false});
+                  if (result) {
+                    this.setState({logedIn: true});
+                    this.props.navigation.navigate('MainScreen');
+                  }
+                }}>
+                <Image style={styles.logo} source={googleLogo} />
+                <Text>{'Đăng nhập bằng tài khoản Google'}</Text>
               </TouchableOpacity>
-            </Animated.View>
-          );
-        })}
-
-        <Animated.View style={{opacity: this.signInFadeAnimValue}}>
-          <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              margin: 10,
-            }}
-            onPress={() => {
-              this.props.navigation.navigate('Login');
-            }}>
-            <Text>Already have an account?</Text>
-            <Text style={{color: '#1e90ff'}}>Sign in</Text>
-          </TouchableOpacity>
+              <TouchableOpacity style={[styles.signUpButton]}>
+                <Image style={styles.logo} source={facebookLogo} />
+                <Text>{'Đăng nhập bằng tài khoản Facebook'}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </Animated.View>
       </SafeAreaView>
     );
   }
 }
+
+const dim = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   fullScreen: {
@@ -138,7 +198,7 @@ const styles = StyleSheet.create({
     borderColor: '#f0e68c',
     borderRadius: 5,
     margin: 10,
-    width: 200,
+    width: dim.width * 0.7,
     height: 40,
   },
   signInText: {

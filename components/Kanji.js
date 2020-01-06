@@ -1,11 +1,10 @@
-/* eslint-disable react/jsx-no-undef */
-import React, {Component, PureComponent} from 'react';
+import React, {Component} from 'react';
 import {
   SafeAreaView,
-  View,
-  StatusBar,
-  TouchableOpacity,
   Text,
+  View,
+  TouchableOpacity,
+  StatusBar,
 } from 'react-native';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import SliderEntry from '../components/SliderEntry';
@@ -15,13 +14,13 @@ import {
   slideHeight,
 } from '../components/SliderEntry.style';
 import styles, {colors} from '../components/index.style';
-import n5 from '../assets/n5.jpg';
-import n4 from '../assets/n4.jpg';
-import n3 from '../assets/n3.jpg';
-import n2 from '../assets/n2.jpg';
-import n1 from '../assets/n1.jpg';
+import n5 from '../assets/kanji5.jpg';
+import n4 from '../assets/kanji4.jpg';
+import n3 from '../assets/kanji3.jpg';
+import n2 from '../assets/kanji2.jpg';
+import n1 from '../assets/kanji1.jpg';
 
-export default class Vocabulary extends PureComponent {
+export default class Kanji extends Component {
   state = {
     slider1ActiveSlide: 0,
   };
@@ -42,25 +41,25 @@ export default class Vocabulary extends PureComponent {
     const menu = [
       {
         title: 'N5',
-        destination: 'N5',
+        destination: 'KanjiN',
         locked: false,
         illustration: n5,
       },
       {
         title: 'N4',
-        destination: 'N4',
+        destination: 'KanjiN',
         locked: true,
         illustration: n4,
       },
       {
         title: 'N3',
-        destination: 'N3',
+        destination: 'KanjiN',
         locked: true,
         illustration: n3,
       },
       {
         title: 'N2',
-        destination: 'N2',
+        destination: 'KanjiN',
         locked: true,
         illustration: n2,
       },

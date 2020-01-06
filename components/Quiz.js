@@ -21,7 +21,7 @@ import n3 from '../assets/n3.jpg';
 import n2 from '../assets/n2.jpg';
 import n1 from '../assets/n1.jpg';
 
-export default class Vocabulary extends PureComponent {
+export default class Quiz extends PureComponent {
   state = {
     slider1ActiveSlide: 0,
   };
@@ -42,31 +42,41 @@ export default class Vocabulary extends PureComponent {
     const menu = [
       {
         title: 'N5',
-        destination: 'N5',
+        score: '0',
+        questions: '40',
+        destination: 'QuizN',
         locked: false,
         illustration: n5,
       },
       {
         title: 'N4',
-        destination: 'N4',
+        score: '0',
+        questions: '40',
+        destination: 'QuizN',
         locked: true,
         illustration: n4,
       },
       {
         title: 'N3',
-        destination: 'N3',
+        score: '0',
+        questions: '40',
+        destination: 'QuizN',
         locked: true,
         illustration: n3,
       },
       {
         title: 'N2',
-        destination: 'N2',
+        score: '0',
+        questions: '40',
+        destination: 'QuizN',
         locked: true,
         illustration: n2,
       },
       {
         title: 'N1',
-        destination: 'N1',
+        score: '0',
+        questions: '40',
+        destination: 'QuizN',
         locked: true,
         illustration: n1,
       },

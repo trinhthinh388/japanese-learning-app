@@ -1,4 +1,7 @@
 {
   "name": "MyProject",
-  "displayName": "MyProject"
+  "displayName": "MyProject",
+  "assetBundlePatterns": [
+    "./assets/*",
+  ]
 }
